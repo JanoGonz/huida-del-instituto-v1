@@ -34,23 +34,44 @@ public class Game
      */
     private void createRooms()
     {
-        Room outside, theater, pub, lab, office;
+        Room aulaProgramacion, pasilloUno, aulaExamenes, balcon, hall, tejado, callejon, patio, calle, salonActos,
+        pasilloDos, banyo, puertaPrincipal, secretaria, pasilloTres;
       
         // create the rooms
-        outside = new Room("outside the main entrance of the university");
-        theater = new Room("in a lecture theater");
-        pub = new Room("in the campus pub");
-        lab = new Room("in a computing lab");
-        office = new Room("in the computing admin office");
+        aulaProgramacion = new Room("Estás en un aula llena de ordenadores, huele fuerte. Todo está oscuro pero ves una puerta");
+        pasilloUno = new Room("Estás en un pasillo, hay varias puertas y una luz tenue entra por la ventana");
+        aulaExamenes = new Room("Estás en un aula, hay una luz suave y no puedes ver todos los pupitres, pero ves una puerta al fondo");
+        balcon = new Room("Estás en un balcon que no lleva a ninguna parte, date la vuelta");
+        hall = new Room("Entras en una gran sala, tiene dos puertas mas la que se encuentra detras de ti, también hay una pequeña ventana que da a un tejadillo");
+        tejado = new Room("Saltas al tejado, cerca tienes la ventana aunque puedes tirarte a un callejon oscuro, si lo haces no podras volver a subir");
+        callejon = new Room("Esta oscuro, pero puedes ver una valla que da al patio");
+        patio = new Room("Hay un poco mas de luz y ves una valla mas alta. La puerta esta cerrada");
+        calle = new Room("Enhorabuena, saltando como un atleta olimpico has llegado a la calle y has escapado del instituto");
+        salonActos = new Room("Estas en una sala enorme con forma de anfiteatro, tiene un proyector y otra salida. Cuidado con las sillas");
+        pasilloDos = new Room("Estas en una sala estrecha, esta muy oscuro pero palpando las paredes puedes encontrar otras dos puertas");
+        banyo = new Room("Entras en una sala llena de azulejos blancos, hay urinarios y grifos muy bajos, huele mal. Mejor vuelve por donde has venido");
+        puertaPrincipal = new Room("Has llegado a la puerta principal. Coges una pantalla de ordenador y rompes la puerta, corre antes de que alguien te vea. \nHas destruido propiedad publica y huido exitosamente del instituto");
+        secretaria = new Room("Iluminando la sala con tu telefono puedes ver cuadros con gente muerta colgando de las paredes. \nPor suerte son orlas y no algo especialmente siniestro, ves una puerta al otro lado de la habitacion y un monton de papeles apilados");
+        pasilloTres = new Room("Ante ti hay una sala estrecha y oscura, deberían haber puesto ventanas, ante ti hay una puerta y en las paredes hay cuadros de los del Ikea");
         
-        // initialise room exits
-        outside.setExits(null, theater, lab, pub);
-        theater.setExits(null, null, null, outside);
-        pub.setExits(null, outside, null, null);
-        lab.setExits(outside, office, null, null);
-        office.setExits(null, null, null, lab);
+        // initialise room exits N\E\S\W
+        aulaProgramacion.setExits(pasilloUno, null, null, null);
+        pasilloUno.setExits(hall, null, aulaProgramacion, aulaExamenes);
+        aulaExamenes.setExits(null, pasilloUno, null, balcon);
+        balcon.setExits(null, aulaExamenes, null, null);
+        hall.setExits(pasilloTres, tejado, pasilloUno, salonActos);
+        tejado.setExits(null, null, callejon, hall);
+        callejon.setExits(tejado, null, patio, null);
+        patio.setExits(callejon, calle, null, null);
+        calle.setExits(null, patio, null, null);
+        salonActos.setExits(pasilloDos, hall, null, null);
+        pasilloDos.setExits(puertaPrincipal, secretaria, salonActos, banyo);
+        banyo.setExits(null, pasilloDos, null, null);
+        puertaPrincipal.setExits(null, null, pasilloDos, null);
+        secretaria.setExits(null, null, pasilloTres, pasilloDos);
+        pasilloTres.setExits(secretaria, null, hall, null);
 
-        currentRoom = outside;  // start game outside
+        currentRoom = aulaProgramacion;  // start game outside
     }
 
     /**
@@ -81,8 +102,8 @@ public class Game
         System.out.println("World of Zuul is a new, incredibly boring adventure game.");
         System.out.println("Type 'help' if you need help.");
         System.out.println();
-        System.out.println("You are " + currentRoom.getDescription());
-        System.out.print("Exits: ");
+        System.out.println(currentRoom.getDescription());
+        System.out.print("Salidas: ");
         if(currentRoom.northExit != null) {
             System.out.print("north ");
         }
@@ -176,7 +197,7 @@ public class Game
         }
         else {
             currentRoom = nextRoom;
-            System.out.println("You are " + currentRoom.getDescription());
+            System.out.println(currentRoom.getDescription());
             System.out.print("Exits: ");
             if(currentRoom.northExit != null) {
                 System.out.print("north ");
